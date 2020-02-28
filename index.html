@@ -9,38 +9,79 @@
 <script type="text/javascript">
 
 class Cube{
-    constructor(pos_x,pos_y,size,color){
+    constructor(screen,pos_x,pos_y,size,color){
+        this.screen = screen;
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.size = size;
         this.color = color;
     }
 
-    draw(screen){
-        screen.fillStyle = this.color;
-        screen.fillRect(this.pos_x*this.size, this.pos_y*this.size,this.size,this.size);
+    move(dir_x,dir_y){
+        this.pos_x += dir_x;
+        this.pos_y += dir_y;
     }
-}
+    draw(){
+        this.screen.fillStyle = this.color;
+        this.screen.fillRect(this.pos_x*this.size, this.pos_y*this.size,this.size,this.size);
+    }
 
+}
 
 
 function initCanvas(){
     const canvas = document.getElementById('canvas');
     const screen = canvas.getContext('2d');
-    const sqr = 10;
+    const sqr = canvas.width/100;
 
-    const rect = new Cube(0,0,10,"magenta");
+    document.addEventListener("keydown", keyPush);
+
+    const rect = new Cube(screen,0,0,sqr,"magenta");
+    const rect2 = new Cube(screen,10,10,sqr,"blue");
+
+    function update(dir_x,dir_y){
+        rect.move(dir_x,dir_y);
+        rect2.move(dir_x,dir_y);
+    }
 
     function animate(){
+        requestAnimationFrame(animate)
         screen.clearRect(0, 0, canvas.width, canvas.height);
-        rect.draw(screen);
-        rect.pos_x++;
+        rect.draw();
+        rect2.draw()
     }
-    var animateInterval = setInterval(animate, 100);
+    //var animateInterval = setInterval(animate, 80);
+
+    
+    function keyPush(event){
+        switch (event.keyCode){
+            case 37: // Left
+                update(-1,0)
+                console.log("Left");
+                break;
+            case 38: // up
+                update(0,-1)
+                console.log("Up");
+                break;
+            case 39: // right
+                update(1,0)
+                console.log("Right");
+                break;
+            case 40: // down
+                update(0,1)
+                console.log("Down");
+                break;         
+            default:         
+                break;
+        }
+    }
+
+
+    animate()
 }
 
 window.addEventListener('load', function(event) {
-    initCanvas();
+    Game = initCanvas();
 });
 
 
