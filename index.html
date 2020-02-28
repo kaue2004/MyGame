@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TRON</title>
+</head>
+<body>
+ 
+<canvas id="canvas" width="600" height="600"></canvas>
+<script type="text/javascript">
+
+class Cube{
+    constructor(pos_x,pos_y,size,color){
+        this.pos_x = pos_x;
+        this.pos_y = pos_y;
+        this.size = size;
+        this.color = color;
+    }
+
+    draw(screen){
+        screen.fillStyle = this.color;
+        screen.fillRect(this.pos_x*this.size, this.pos_y*this.size,this.size,this.size);
+    }
+}
+
+
+
+function initCanvas(){
+    const canvas = document.getElementById('canvas');
+    const screen = canvas.getContext('2d');
+    const sqr = 10;
+
+    const rect = new Cube(0,0,10,"magenta");
+
+    function animate(){
+        screen.clearRect(0, 0, canvas.width, canvas.height);
+        rect.draw(screen);
+        rect.pos_x++;
+    }
+    var animateInterval = setInterval(animate, 100);
+}
+
+window.addEventListener('load', function(event) {
+    initCanvas();
+});
+
+
+
+</script>
+</body>
+</html>
