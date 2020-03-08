@@ -1,125 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TRON</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACT</title>
+    <style>
+        body,html{margin:0;padding:0;height: 100%;width: 100%;}
+        #content{position:relative;height:100%}
+        #canvas{border:1px solid black; position: absolute; top:50%; left: 50%; transform: translate(-50%,-50%);}
+    </style>
 </head>
 <body>
- 
-<canvas id="canvas" width="600" height="600"></canvas>
-<script type="text/javascript">
 
-class Cube{
-    constructor(screen,pos_x,pos_y,size,color){
-        this.screen = screen;
-        this.pos_x = pos_x;
-        this.pos_y = pos_y;
-        this.size = size;
-        this.color = color;
-    }
+    <!--CANVAS-->
+    <div>
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
 
-    move(dir_x,dir_y){
-        this.pos_x += dir_x;
-        this.pos_y += dir_y;
-    }
-    draw(){
-        this.screen.fillStyle = this.color;
-        this.screen.fillRect(this.pos_x*this.size, this.pos_y*this.size,this.size,this.size);
-    }
+    <script>
+  
+        class Cube{
+            constructor(x,y,size,color){
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+            }
+            draw(screen){
+                screen.fillStyle = this.color;
+                screen.fillRect(this.x*this.size, this.y*this.size,this.size,this.size);
+            }
+        }
 
-}
+        function initCanvas(){
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            document.addEventListener("keydown", keyPush);
 
-class Snake extends Cube{
-    constructor(screen,pos_x,pos_y,size,color){
-        super(screen,pos_x,pos_y,size,color)
-        this.trail = [];
-        this.tail = 5;
-    }
 
-    move(dir_x,dir_y){
-        this.pos_x += dir_x;
-        this.pos_y += dir_y;
+            const rect = new Cube(0,0,canvas.width/50,"magenta");
 
-        
-        this.trail.push({x:this.pos_x,y:this.pos_y })
-                while (this.trail.length > this.tail) {
-                    this.trail.shift();
+            function animate(){
+                requestAnimationFrame(animate)
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                rect.draw(ctx)
+            }
+
+            function keyPush(event){
+                switch (event.keyCode) {
+                    case 37: // Left
+                        console.log("LEFT")
+                        rect.x--;
+                        break;
+                    case 38: // up
+                        console.log("UP")
+                        rect.y--;
+                        break;
+                    case 39: // right
+                        console.log("RIGHT")
+                        rect.x++;
+                        break;
+                    case 40: // down
+                        console.log("DOWN")
+                        rect.y++;
+                        break;         
+                    default:
+                        break;
                 }
-    }
-    draw(){
-        this.screen.fillStyle = this.color;
-        for (var i = 0; i < this.trail.length; i++) {
-            this.screen.fillRect(this.trail[i].x*this.size, this.trail[i].y*this.size, this.size-1,this.size-1);
+            }
+
+            //var animateInterval = setInterval(animate, 100);
+            requestAnimationFrame(animate);
         }
-    }
 
-}
-
-function initCanvas(){
-    const canvas = document.getElementById('canvas');
-    const screen = canvas.getContext('2d');
-    const sqr = canvas.width/100;
-    var x=0,y=0;///
-    document.addEventListener("keydown", keyPush);
-
-    const rect = new Snake(screen,0,0,sqr,"magenta");
-    const rect2 = new Snake(screen,10,10,sqr,"blue");
-    const cobra = new Snake(screen,20,20,sqr,"green");
+        window.addEventListener('load', function(event) {
+            initCanvas();
+        });
 
 
-    function update(dir_x,dir_y){
-        rect.move(dir_x,dir_y);
-        rect2.move(dir_x,dir_y);
-        cobra.move(dir_x,dir_y);
-    }
+    </script>
 
-    function animate(){
-        update(x,y)///
-        //requestAnimationFrame(animate)
-        screen.clearRect(0, 0, canvas.width, canvas.height);
-        rect.draw();
-        rect2.draw();
-        cobra.draw();
-    }
-    var animateInterval = setInterval(animate, 80);///
-
-    
-    function keyPush(event){
-        switch (event.keyCode){
-            case 37: // Left
-                update(-1,0)
-                x=-1,y=0
-                console.log("Left");
-                break;
-            case 38: // up
-                update(0,-1)
-                x=0,y=-1
-                console.log("Up");
-                break;
-            case 39: // right
-                update(1,0)
-                x=1,y=0
-                console.log("Right");
-                break;
-            case 40: // down
-                update(0,1)
-                x=0,y=1
-                console.log("Down");
-                break;         
-            default:         
-                break;
-        }
-    }
-
-
-    //animate()
-}
-
-window.addEventListener('load', function(event) {
-    Game = initCanvas();
-});
-
-
-
-</script>
 </body>
 </html>
